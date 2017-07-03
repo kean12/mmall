@@ -16,8 +16,11 @@ public interface UserMapper {
 
     int updateByPrimaryKey(User record);
 
-
+    int checkEmail(String email);
 
     int checkUsername(String username);
-    User selectLogin (@Param("username") String username, @Param("password") String password );
+
+    User selectLogin(@Param("username") String username, @Param("password") String password);
+
+
 }

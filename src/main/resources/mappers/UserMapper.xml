@@ -189,6 +189,12 @@ where username= #{username}
 
 
 
+    <select id="checkEmail" resultType="int" parameterType="string">
+        SELECT COUNT (1) from mmall_user
+        where email= #{email}
+    </select>
+
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from mmall_user
     where id = #{id,jdbcType=INTEGER}
