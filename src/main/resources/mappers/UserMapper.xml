@@ -322,4 +322,19 @@ where username= #{username}
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+<select id="selectQuestionByUsername" resultType="string" parameterType="string">
+    select question FROM  mmall_user
+    where username= #{username}
+
+</select>
+
+    <select id="checkAnswer" resultType="int" parameterType="map">
+SELECT  count(1) from mmall_user
+where username =#{username}
+and question =#{question}
+and answer= #{answer}
+    </select>
+
+
 </mapper>

@@ -43,16 +43,39 @@ import javax.servlet.http.HttpSession;
         session.removeAttribute(Const.CURRENT_USER);
         return ServerResponse.createBySuccess();
     }
+
     @RequestMapping(value = "register.do", method = RequestMethod.GET) @ResponseBody
 
     public ServerResponse<String> register(User user) {
         return iUserService.register(user);
 
     }
-    @RequestMapping(value = "check_valid.do", method = RequestMethod.GET) @ResponseBody
-public ServerResponse<String> checkValid(String str, String type){
-        return iUserService.checkValid(str, type);
-}
 
+    @RequestMapping(value = "check_valid.do", method = RequestMethod.GET) @ResponseBody
+    public ServerResponse<String> checkValid(String str, String type) {
+        return iUserService.checkValid(str, type);
+    }
+
+    public ServerResponse<User> getUserInfo(HttpSession session) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user != null) {
+            return ServerResponse.createBySuccess(user);
+        }
+        return ServerResponse.createByErrorMessage("用户未登录，无法获得当前用户的信息");
+    }
+
+    @RequestMapping(value = "forget_get_question.do", method = RequestMethod.GET) @ResponseBody
+    public ServerResponse<String> forgetGetQuestion(String username) {
+        return iUserService.selectQuestion(username);
+
+    }
+
+    @RequestMapping(value = "forget_check_answer.do", method = RequestMethod.GET) @ResponseBody
+    public ServerResponse<String> forgetCheckAnswer (String username, String question, String answer){
+        //guwau 缓存
+
+        return iUserService.checkAnswer(username,question,answer);
+
+    }
 
 }
