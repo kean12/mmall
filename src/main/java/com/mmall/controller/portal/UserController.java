@@ -71,11 +71,19 @@ import javax.servlet.http.HttpSession;
     }
 
     @RequestMapping(value = "forget_check_answer.do", method = RequestMethod.GET) @ResponseBody
-    public ServerResponse<String> forgetCheckAnswer (String username, String question, String answer){
+    public ServerResponse<String> forgetCheckAnswer(String username, String question,
+        String answer) {
         //guwau 缓存
 
-        return iUserService.checkAnswer(username,question,answer);
+        return iUserService.checkAnswer(username, question, answer);
 
+    }
+
+    @RequestMapping(value = "forget_rest_password.do", method = RequestMethod.GET) @ResponseBody
+    public ServerResponse<String> forgetRestPassword(String username, String passwordNew,
+        String forgetToken) {
+
+        return iUserService.forgetRestPassword(username, passwordNew, forgetToken);
     }
 
 }
