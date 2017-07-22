@@ -21,7 +21,9 @@ public interface IUserService {
     ServerResponse<String> checkAnswer(String username, String question, String answer);
 
     ServerResponse<String> forgetRestPassword(String username, String passwordNew, String forgetToken);
+    ServerResponse<User> updateInformation(User user);
 
     ServerResponse<String> restPassword(String passwordOld, String passwordNew, User user);
+    ServerResponse<User> getInformation(Integer userId);
 
 }

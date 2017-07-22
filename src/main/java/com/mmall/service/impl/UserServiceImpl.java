@@ -169,5 +169,39 @@ import java.util.UUID;
         return ServerResponse.createByErrorMessage("密码更新失败");
     }
 
+    public ServerResponse<User> updateInformation(User user) {
+        //username 是不能被更新的
+        //email 也要做一个校验,检验新的email是不是已经存在,并且存在的email如果相同的话,不能是我们当前的这个用户的
+        int resutlCount = userMapper.checkEmailByUserId(user.getEmail(), user.getId());
+        if (resutlCount > 0) {
+            return ServerResponse.createByErrorMessage("eamil已经存在,请更换email 在尝试更新");
+        }
+        User updateUser =new User();
+        updateUser.setId(user.getId());
+        updateUser.setEmail(user.getEmail());
+        updateUser.setPhone(user.getPhone());
+        updateUser.setPhone(user.getPhone());
+        updateUser.setAnswer(user.getAnswer());
+
+        int updatCount =userMapper.updateByPrimaryKeySelective(updateUser);
+        if(updatCount >0){
+            return  ServerResponse.createBySuccess("更新个人信息成功",updateUser);
+        }
+
+        return ServerResponse.createByErrorMessage("更新个人信息失败");
+
+    }
+    public ServerResponse<User> getInformation(Integer userId){
+        User user =userMapper.selectByPrimaryKey(userId);
+        if (user ==null){
+            return  ServerResponse.createByErrorMessage("找不到当前用户");
+        }
+        user.setPassword(StringUtils.EMPTY);
+        return ServerResponse.createBySuccess(user);
+    }
+
+
+
+
 }
 

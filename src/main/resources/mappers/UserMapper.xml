@@ -351,5 +351,14 @@ and answer= #{answer}
         and id = #{userId}
 
     </select>
+    
+    
+    <select id="checkEmailByUserId" resultType="int" parameterType="map">
+        SELECT count(1) FROM  mmall_user
+        where email =#{email}
+        and id !=#{userId}
+
+
+    </select>
 
 </mapper>
