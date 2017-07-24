@@ -15,8 +15,12 @@ import javax.servlet.http.HttpSession;
 /**
  * Created by Keane on 7/23/17.
  */
-@Controller @RequestMapping("/manager/user") public class UserManagerController {
-    @Autowired private IUserService iUserService;
+@Controller @RequestMapping("/manager/user")
+public class UserManagerController {
+
+    @Autowired
+    private IUserService iUserService;
+
     @RequestMapping(value="login.do",method = RequestMethod.POST)
     @ResponseBody
 
