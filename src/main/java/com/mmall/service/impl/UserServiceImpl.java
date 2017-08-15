@@ -7,7 +7,6 @@ import com.mmall.dao.UserMapper;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
 import com.mmall.util.MD5Util;
-import net.sf.jsqlparser.schema.Server;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +16,14 @@ import java.util.UUID;
 /**
  * Created by Keane on 6/25/17.
  */
-@Service("iUserService") public class UserServiceImpl implements IUserService {
-    @Autowired private UserMapper userMapper;
+@Service("iUserService")
+public class UserServiceImpl implements IUserService {
+    @Autowired
+    private UserMapper userMapper;
 
 
-    @Override public ServerResponse<User> login(String username, String password) {
+    @Override
+    public ServerResponse<User> login(String username, String password) {
         int resutlCount = userMapper.checkUsername(username);
         if (resutlCount == 0) {
             return ServerResponse.createByErrorMessage("用户名不存在");
@@ -53,7 +55,6 @@ import java.util.UUID;
         if (!validResponse.isSuccess()) {
             return validResponse;
         }
-
 
 
         user.setRole(Const.Role.ROLE_CUSTOMER);
@@ -124,7 +125,7 @@ import java.util.UUID;
     }
 
     public ServerResponse<String> forgetRestPassword(String username, String passwordNew,
-        String forgetToken) {
+                                                     String forgetToken) {
         if (org.apache.commons.lang3.StringUtils.isBlank(forgetToken)) {
             return ServerResponse.createByErrorMessage("参数错误， token 需要传递");
         }
@@ -156,7 +157,7 @@ import java.util.UUID;
     public ServerResponse<String> restPassword(String passwordOld, String passwordNew, User user) {
         //防止横向越权,要校验一下这个用户的旧密码,一定要制定是这个用户,因为我们会查询一个 count(1), 如果不指定id,那么结果就是true了.
         int resultCount =
-            userMapper.checkPassword(MD5Util.MD5EncodeUtf8(passwordOld), user.getId());
+                userMapper.checkPassword(MD5Util.MD5EncodeUtf8(passwordOld), user.getId());
         if (resultCount == 0) {
             return ServerResponse.createByErrorMessage("旧密码错误");
         }
@@ -176,32 +177,43 @@ import java.util.UUID;
         if (resutlCount > 0) {
             return ServerResponse.createByErrorMessage("eamil已经存在,请更换email 在尝试更新");
         }
-        User updateUser =new User();
+        User updateUser = new User();
         updateUser.setId(user.getId());
         updateUser.setEmail(user.getEmail());
         updateUser.setPhone(user.getPhone());
         updateUser.setPhone(user.getPhone());
         updateUser.setAnswer(user.getAnswer());
 
-        int updatCount =userMapper.updateByPrimaryKeySelective(updateUser);
-        if(updatCount >0){
-            return  ServerResponse.createBySuccess("更新个人信息成功",updateUser);
+        int updatCount = userMapper.updateByPrimaryKeySelective(updateUser);
+        if (updatCount > 0) {
+            return ServerResponse.createBySuccess("更新个人信息成功", updateUser);
         }
 
         return ServerResponse.createByErrorMessage("更新个人信息失败");
 
     }
-    public ServerResponse<User> getInformation(Integer userId){
-        User user =userMapper.selectByPrimaryKey(userId);
-        if (user ==null){
-            return  ServerResponse.createByErrorMessage("找不到当前用户");
+
+    public ServerResponse<User> getInformation(Integer userId) {
+        User user = userMapper.selectByPrimaryKey(userId);
+        if (user == null) {
+            return ServerResponse.createByErrorMessage("找不到当前用户");
         }
         user.setPassword(StringUtils.EMPTY);
         return ServerResponse.createBySuccess(user);
     }
 
 
-
+    //backend
+    /*
+    *校验是否是管理员
+    *
+    * */
+    public ServerResponse checkAdminRole(User user) {
+        if (user != null && user.getRole().intValue() == Const.Role.ROLE_ADMIN) {
+            return ServerResponse.createBySuccess();
+        }
+        return ServerResponse.creatByError();
+    }
 
 }
 
